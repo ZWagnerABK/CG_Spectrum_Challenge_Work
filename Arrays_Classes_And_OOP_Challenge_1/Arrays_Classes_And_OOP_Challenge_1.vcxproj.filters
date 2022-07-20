@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="Arrays_Classes_And_OOP_Challenge_1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
