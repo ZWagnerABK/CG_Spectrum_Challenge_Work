@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32630.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Blank_Project", "CG_Spectrum_Challenge_Work\CG_Spectrum_Challenge_Work.vcxproj", "{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plain_Old_Data_And_Functions_Challenge_1", "Plain_Old_Data_And_Functions_Challenge_1\Plain_Old_Data_And_Functions_Challenge_1.vcxproj", "{BED299E1-A502-417F-9D08-00EC63C8BB6A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plain_Old_Data_And_Functions_Challenge_2", "Plain_Old_Data_And_Functions_Challenge_2\Plain_Old_Data_And_Functions_Challenge_2.vcxproj", "{770907DB-7A5B-4FC4-A082-7714122EEC9E}"
@@ -15,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Branching_And_Loops_Challen
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Arrays_Classes_And_OOP_Challenge_1", "Arrays_Classes_And_OOP_Challenge_1\Arrays_Classes_And_OOP_Challenge_1.vcxproj", "{3996898A-FCA7-40FF-8A94-2B01755D0FA4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Blank_Project", "Blank_Project\Blank_Project.vcxproj", "{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +23,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}.Debug|x64.ActiveCfg = Debug|x64
-		{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}.Debug|x64.Build.0 = Debug|x64
-		{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}.Debug|x86.ActiveCfg = Debug|Win32
-		{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}.Debug|x86.Build.0 = Debug|Win32
-		{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}.Release|x64.ActiveCfg = Release|x64
-		{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}.Release|x64.Build.0 = Release|x64
-		{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}.Release|x86.ActiveCfg = Release|Win32
-		{6B9C811D-BA9A-4C63-9167-E10421E4F2CD}.Release|x86.Build.0 = Release|Win32
 		{BED299E1-A502-417F-9D08-00EC63C8BB6A}.Debug|x64.ActiveCfg = Debug|x64
 		{BED299E1-A502-417F-9D08-00EC63C8BB6A}.Debug|x64.Build.0 = Debug|x64
 		{BED299E1-A502-417F-9D08-00EC63C8BB6A}.Debug|x86.ActiveCfg = Debug|Win32
@@ -71,6 +63,14 @@ Global
 		{3996898A-FCA7-40FF-8A94-2B01755D0FA4}.Release|x64.Build.0 = Release|x64
 		{3996898A-FCA7-40FF-8A94-2B01755D0FA4}.Release|x86.ActiveCfg = Release|Win32
 		{3996898A-FCA7-40FF-8A94-2B01755D0FA4}.Release|x86.Build.0 = Release|Win32
+		{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}.Debug|x64.ActiveCfg = Debug|x64
+		{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}.Debug|x64.Build.0 = Debug|x64
+		{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}.Debug|x86.ActiveCfg = Debug|Win32
+		{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}.Debug|x86.Build.0 = Debug|Win32
+		{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}.Release|x64.ActiveCfg = Release|x64
+		{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}.Release|x64.Build.0 = Release|x64
+		{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}.Release|x86.ActiveCfg = Release|Win32
+		{B44FD4B6-BEBE-4B1C-9FFC-F18CF23ABC46}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
