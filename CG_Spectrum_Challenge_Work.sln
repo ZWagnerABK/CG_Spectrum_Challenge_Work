@@ -21,6 +21,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Arrays_Classes_And_OOP_Chal
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pointers_References_And_Dynamic_Memory_Challenge_1", "Pointers_References_And_Dynamic_Memory_Challenge_1\Pointers_References_And_Dynamic_Memory_Challenge_1.vcxproj", "{6554CE58-6F91-4315-8B98-933344F6724D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maze_Game", "Maze_Game", "{7CF9ACE8-8983-4991-88A5-61A933FA822E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MazeGame_Project", "MazeGame_Project\Project.vcxproj", "{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MazeGame_LevelEditor", "MazeGame_LevelEditor\LevelEditor.vcxproj", "{810D8667-C0DA-4A92-9697-22A43FED4D05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -101,9 +107,29 @@ Global
 		{6554CE58-6F91-4315-8B98-933344F6724D}.Release|x64.Build.0 = Release|x64
 		{6554CE58-6F91-4315-8B98-933344F6724D}.Release|x86.ActiveCfg = Release|Win32
 		{6554CE58-6F91-4315-8B98-933344F6724D}.Release|x86.Build.0 = Release|Win32
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}.Debug|x64.ActiveCfg = Debug|x64
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}.Debug|x64.Build.0 = Debug|x64
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}.Debug|x86.ActiveCfg = Debug|Win32
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}.Debug|x86.Build.0 = Debug|Win32
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}.Release|x64.ActiveCfg = Release|x64
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}.Release|x64.Build.0 = Release|x64
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}.Release|x86.ActiveCfg = Release|Win32
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76}.Release|x86.Build.0 = Release|Win32
+		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Debug|x64.ActiveCfg = Debug|x64
+		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Debug|x64.Build.0 = Debug|x64
+		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Debug|x86.ActiveCfg = Debug|Win32
+		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Debug|x86.Build.0 = Debug|Win32
+		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Release|x64.ActiveCfg = Release|x64
+		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Release|x64.Build.0 = Release|x64
+		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Release|x86.ActiveCfg = Release|Win32
+		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0FFFA89B-A565-41BF-BB48-907F6CE4CE76} = {7CF9ACE8-8983-4991-88A5-61A933FA822E}
+		{810D8667-C0DA-4A92-9697-22A43FED4D05} = {7CF9ACE8-8983-4991-88A5-61A933FA822E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1AA9A7C-BAE3-4753-8AAC-C0087C23D8A5}
