@@ -1,31 +1,28 @@
 #pragma once
 #include <string>
-#include <iostream>
 
 class Vehicle
 {
 public:
-	Vehicle() {};
-	Vehicle(int year, int distance, int time, std::string brand, std::string name)
-		:m_year(year), m_distance(distance), m_timeTraveled(time), m_brand(brand), m_name(name)
-	{};
+	Vehicle();
+	Vehicle(int year, int distance, int time, std::string brand, std::string name);
 
 	~Vehicle() {};
 
-	int GetYear() const { return m_year; } ;
-	int GetDistance() const { return m_distance; };
-	int GetTimeTraveled() const { return m_timeTraveled; };
-	std::string GetBrand() const { return m_brand; };
-	std::string GetName() const { return m_name; };
+	int GetYear() const;
+	int GetDistance() const;
+	int GetTimeTraveled() const;
+	std::string GetBrand() const;
+	std::string GetName() const;
 
-	void SetYear(int year) { m_year = year; };
-	void SetDistance(int miles) { m_distance = miles; };
-	void SetTimeTraveled(int time) { m_timeTraveled = time; };
-	void SetBrand(std::string brand) { m_brand = brand; };
-	void SetName(std::string name) { m_name = name; };
+	void SetYear(int year);
+	void SetDistance(int miles);
+	void SetTimeTraveled(int time);
+	void SetBrand(std::string brand);
+	void SetName(std::string name);
 
 	virtual void Drive(int distance, int time);
-	virtual void CreatedMessage() = 0;
+	virtual void CreatedMessage() const = 0;
 	virtual void DisplayInfo() = 0;
 
 private:

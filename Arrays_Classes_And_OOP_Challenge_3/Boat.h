@@ -10,8 +10,8 @@ public:
 	~Boat() {};
 
 	void Drive(int nauticalMiles, int hours) override;
-	void CreatedMessage() override;
-	void DisplayInfo() override;
+	void CreatedMessage() const override;
+	void DisplayInfo()  override;
 
 private:
 	int m_maintenanceHours = 50;

@@ -1,4 +1,5 @@
 #include "Airplane.h"
+#include <iostream>
 
 Airplane::Airplane()
 {
@@ -32,7 +33,7 @@ void Airplane::DisplayInfo()
 	std::cout << "Time for maintenance: " << (TimeForMaintenance() ? "Yes" : "No") << std::endl;
 }
 
-void Airplane::CreatedMessage()
+void Airplane::CreatedMessage() const 
 {
 	std::cout << "\nA new Airplane has been created!\n";
 }

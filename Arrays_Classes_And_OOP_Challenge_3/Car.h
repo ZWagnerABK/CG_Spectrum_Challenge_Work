@@ -14,7 +14,7 @@ public:
 	void SetOilChangeMilage(int oilChangeMilage) { m_oilChangeMilage = oilChangeMilage; };
 
 	void Drive(int miles, int hours) override;
-	void CreatedMessage() override;
+	void CreatedMessage() const override;
 	void DisplayInfo() override;
 
 private:

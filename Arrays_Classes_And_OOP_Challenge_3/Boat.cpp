@@ -1,4 +1,5 @@
 #include "Boat.h"
+#include <iostream>
 
 Boat::Boat()
 {
@@ -19,7 +20,7 @@ void Boat::Drive(int nauticalMiles, int hours)
 	std::cout << "\nYou drove " << nauticalMiles << " nautical miles in roughly " << hours << " hours in Boat \"" << GetName() << "\".";
 }
 
-void Boat::CreatedMessage()
+void Boat::CreatedMessage() const
 {
 	std::cout << "\nA new Boat has been created!\n";
 }

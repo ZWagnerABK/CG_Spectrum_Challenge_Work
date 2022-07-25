@@ -1,4 +1,5 @@
 #include "Car.h"
+#include <iostream>
 
 Car::Car()
 {
@@ -19,7 +20,7 @@ void Car::Drive(int miles, int hours)
 	std::cout << "\nYou drove " << miles << " miles in roughly " << hours << " hours in Car \"" << GetName() << "\".";
 }
 
-void Car::CreatedMessage()
+void Car::CreatedMessage() const
 {
 	std::cout << "\nA new Car has been created!\n";
 }

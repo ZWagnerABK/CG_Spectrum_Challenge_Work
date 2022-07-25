@@ -10,7 +10,7 @@ public:
 	~Airplane() {};
 
 	void Drive(int kilometers, int hours) override;
-	void CreatedMessage() override;
+	void CreatedMessage() const override;
 	void DisplayInfo() override;
 
 private:
