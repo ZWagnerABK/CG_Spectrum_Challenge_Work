@@ -9,6 +9,7 @@
 #include "Door.h"
 #include "Goal.h"
 #include "Money.h"
+#include "Bomb.h"
 
 using namespace std;
 
@@ -158,6 +159,10 @@ bool Level::ConvertLevel(int* playerX, int* playerY)
 			case '$':
 				m_pLevelData[index] = ' ';
 				m_pActors.push_back(new Money(x, y, 1 + rand() % 5));
+				break;
+			case '#':
+				m_pLevelData[index] = ' ';
+				m_pActors.push_back(new Bomb(x, y));
 				break;
 			case '@':
 				m_pLevelData[index] = ' ';

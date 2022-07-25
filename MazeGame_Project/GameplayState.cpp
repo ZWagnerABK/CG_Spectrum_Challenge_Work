@@ -12,6 +12,7 @@
 #include "Goal.h"
 #include "AudioManager.h"
 #include "Utility.h"
+#include "Bomb.h"
 #include "StateMachineExampleGame.h"
 
 using namespace std;
@@ -30,6 +31,7 @@ GameplayState::GameplayState(StateMachineExampleGame* pOwner)
 	, m_currentLevel(0)
 	, m_pLevel(nullptr)
 {
+	m_LevelNames.push_back("Bomb_Testing_Level.txt");
 	m_LevelNames.push_back("MazeGame_Level1.txt");
 	m_LevelNames.push_back("MazeGame_Level2.txt");
 	m_LevelNames.push_back("MazeGame_Level3.txt");
@@ -134,6 +136,7 @@ bool GameplayState::Update(bool processInput)
 			{
 				// On to the next level
 				Load();
+				m_player.ResetItems();
 			}
 
 		}
@@ -186,6 +189,19 @@ void GameplayState::HandleCollision(int newPlayerX, int newPlayerY)
 				collidedKey->Remove();
 				m_player.SetPosition(newPlayerX, newPlayerY);
 				AudioManager::GetInstance()->PlayKeyPickupSound();
+			}
+			break;
+		}
+		case ActorType::Bomb:
+		{
+			Bomb* collidedBomb = dynamic_cast<Bomb*>(collidedActor);
+			assert(collidedBomb);
+			if (!m_player.HasBomb())
+			{
+				m_player.PickupBomb(collidedBomb);
+				collidedBomb->Remove();
+				m_player.SetPosition(newPlayerX, newPlayerY);
+				AudioManager::GetInstance()->PlayBombPickupSound();
 			}
 			break;
 		}
@@ -282,6 +298,17 @@ void GameplayState::DrawHUD(const HANDLE& console)
 	if (m_player.HasKey())
 	{
 		m_player.GetKey()->Draw();
+		cout << " " << Level::WAL;
+	}
+	else
+	{
+		cout << " " << Level::WAL;
+	}
+
+	cout << " bomb:";
+	if (m_player.HasBomb())
+	{
+		m_player.GetBomb()->Draw();
 	}
 	else
 	{
@@ -289,7 +316,7 @@ void GameplayState::DrawHUD(const HANDLE& console)
 	}
 
 	// RightSide border
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	/*CONSOLE_SCREEN_BUFFER_INFO csbi;
 	GetConsoleScreenBufferInfo(console, &csbi);
 
 	COORD pos;
@@ -297,7 +324,7 @@ void GameplayState::DrawHUD(const HANDLE& console)
 	pos.Y = csbi.dwCursorPosition.Y;
 	SetConsoleCursorPosition(console, pos);
 
-	cout << Level::WAL;
+	cout << Level::WAL;*/
 	cout << endl;
 
 	// Bottom Border
