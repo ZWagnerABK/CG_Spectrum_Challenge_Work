@@ -2,7 +2,7 @@
 
 #include "Player.h"
 #include "Key.h"
-#include "Bomb.h"
+#include "Shield.h"
 #include "AudioManager.h"
 
 using namespace std;
@@ -12,7 +12,7 @@ constexpr int kStartingNumberOfLives = 3;
 Player::Player()
 	: PlacableActor(0, 0)
 	, m_pCurrentKey(nullptr)
-	, m_pBomb(nullptr)
+	, m_pShield(nullptr)
 	, m_money(0)
 	, m_lives(kStartingNumberOfLives)
 {
@@ -54,31 +54,31 @@ void Player::DropKey()
 }
 
 
-void Player::PickupBomb(Bomb* bomb)
+void Player::PickupShield(Shield* shield)
 {
-	m_pBomb = bomb;
+	m_pShield = shield;
 }
 
-bool Player::HasBomb()
+bool Player::HasShield()
 {
-	return m_pBomb != nullptr;
+	return m_pShield != nullptr;
 }
 
-void Player::UseBomb()
+void Player::UseShield()
 {
-	if (m_pBomb)
+	if (m_pShield)
 	{
-		m_pBomb->Remove();
-		m_pBomb = nullptr;
+		m_pShield->Remove();
+		m_pShield = nullptr;
 	}
 }
 
 void Player::ResetItems()
 {
-	if (m_pBomb)
+	if (m_pShield)
 	{
-		m_pBomb->Remove();
-		m_pBomb = nullptr;
+		m_pShield->Remove();
+		m_pShield = nullptr;
 	}
 
 	if (m_pCurrentKey)

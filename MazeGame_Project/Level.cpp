@@ -9,7 +9,7 @@
 #include "Door.h"
 #include "Goal.h"
 #include "Money.h"
-#include "Bomb.h"
+#include "Shield.h"
 
 using namespace std;
 
@@ -162,7 +162,7 @@ bool Level::ConvertLevel(int* playerX, int* playerY)
 				break;
 			case '#':
 				m_pLevelData[index] = ' ';
-				m_pActors.push_back(new Bomb(x, y));
+				m_pActors.push_back(new Shield(x, y));
 				break;
 			case '@':
 				m_pLevelData[index] = ' ';

@@ -2,7 +2,7 @@
 #include "PlacableActor.h"
 
 class Key;
-class Bomb;
+class Shield;
 
 class Player : public PlacableActor
 {
@@ -16,10 +16,10 @@ public:
 	void DropKey();
 	Key* GetKey() { return m_pCurrentKey; }
 
-	bool HasBomb();
-	void PickupBomb(Bomb* bomb);
-	void UseBomb();
-	Bomb* GetBomb() { return m_pBomb; }
+	bool HasShield();
+	void PickupShield(Shield* bomb);
+	void UseShield();
+	Shield* GetShield() { return m_pShield; }
 
 	void AddMoney(int money) { m_money += money; }
 	int GetMoney() { return m_money; }
@@ -34,7 +34,7 @@ public:
 
 private:
 	Key* m_pCurrentKey;
-	Bomb* m_pBomb;
+	Shield* m_pShield;
 	int m_money;
 	int m_lives;
 };

@@ -20,7 +20,7 @@ enum class ActorType
 	Key,
 	Money,
 	Player,
-	Bomb
+	Shield
 };
 
 class PlacableActor

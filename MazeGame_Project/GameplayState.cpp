@@ -12,7 +12,7 @@
 #include "Goal.h"
 #include "AudioManager.h"
 #include "Utility.h"
-#include "Bomb.h"
+#include "Shield.h"
 #include "StateMachineExampleGame.h"
 
 using namespace std;
@@ -23,6 +23,7 @@ constexpr int kRightArrow = 77;
 constexpr int kUpArrow = 72;
 constexpr int kDownArrow = 80;
 constexpr int kEscapeKey = 27;
+constexpr int kStaticHUDTopBottomBorderWidth = 59;
 
 GameplayState::GameplayState(StateMachineExampleGame* pOwner)
 	: m_pOwner(pOwner)
@@ -31,7 +32,7 @@ GameplayState::GameplayState(StateMachineExampleGame* pOwner)
 	, m_currentLevel(0)
 	, m_pLevel(nullptr)
 {
-	m_LevelNames.push_back("Bomb_Testing_Level.txt");
+	m_LevelNames.push_back("Shield_Testing_Level.txt");
 	m_LevelNames.push_back("MazeGame_Level1.txt");
 	m_LevelNames.push_back("MazeGame_Level2.txt");
 	m_LevelNames.push_back("MazeGame_Level3.txt");
@@ -156,17 +157,27 @@ void GameplayState::HandleCollision(int newPlayerX, int newPlayerY)
 		{
 			Enemy* collidedEnemy = dynamic_cast<Enemy*>(collidedActor);
 			assert(collidedEnemy);
-			AudioManager::GetInstance()->PlayLoseLivesSound();
+
 			collidedEnemy->Remove();
 			m_player.SetPosition(newPlayerX, newPlayerY);
 
-			m_player.DecrementLives();
-			if (m_player.GetLives() < 0)
+			if (m_player.HasShield())
 			{
-				//TODO: Go to game over screen
-				AudioManager::GetInstance()->PlayLoseSound();
-				m_pOwner->LoadScene(StateMachineExampleGame::SceneName::Lose);
+				AudioManager::GetInstance()->PlayShieldUseSound();
+				m_player.UseShield();
 			}
+			else
+			{
+				AudioManager::GetInstance()->PlayLoseLivesSound();
+				m_player.DecrementLives();
+				if (m_player.GetLives() < 0)
+				{
+					//TODO: Go to game over screen
+					AudioManager::GetInstance()->PlayLoseSound();
+					m_pOwner->LoadScene(StateMachineExampleGame::SceneName::Lose);
+				}
+			}
+			
 			break;
 		}
 		case ActorType::Money:
@@ -192,16 +203,16 @@ void GameplayState::HandleCollision(int newPlayerX, int newPlayerY)
 			}
 			break;
 		}
-		case ActorType::Bomb:
+		case ActorType::Shield:
 		{
-			Bomb* collidedBomb = dynamic_cast<Bomb*>(collidedActor);
-			assert(collidedBomb);
-			if (!m_player.HasBomb())
+			Shield* collidedShield = dynamic_cast<Shield*>(collidedActor);
+			assert(collidedShield);
+			if (!m_player.HasShield())
 			{
-				m_player.PickupBomb(collidedBomb);
-				collidedBomb->Remove();
+				m_player.PickupShield(collidedShield);
+				collidedShield->Remove();
 				m_player.SetPosition(newPlayerX, newPlayerY);
-				AudioManager::GetInstance()->PlayBombPickupSound();
+				AudioManager::GetInstance()->PlayShieldPickupSound();
 			}
 			break;
 		}
@@ -281,7 +292,14 @@ void GameplayState::DrawHUD(const HANDLE& console)
 	cout << endl;
 
 	// Top Border
-	for (int i = 0; i < m_pLevel->GetWidth(); ++i)
+	/*for (int i = 0; i < m_pLevel->GetWidth(); ++i)
+	{
+		cout << Level::WAL;
+	}
+	cout << endl;*/
+
+	//Making Top Border static for now
+	for (int i = 0; i < kStaticHUDTopBottomBorderWidth; ++i)
 	{
 		cout << Level::WAL;
 	}
@@ -298,17 +316,17 @@ void GameplayState::DrawHUD(const HANDLE& console)
 	if (m_player.HasKey())
 	{
 		m_player.GetKey()->Draw();
-		cout << " " << Level::WAL;
+		cout << Level::WAL;
 	}
 	else
 	{
 		cout << " " << Level::WAL;
 	}
 
-	cout << " bomb:";
-	if (m_player.HasBomb())
+	cout << " shield:";
+	if (m_player.HasShield())
 	{
-		m_player.GetBomb()->Draw();
+		m_player.GetShield()->Draw();
 	}
 	else
 	{
@@ -316,19 +334,27 @@ void GameplayState::DrawHUD(const HANDLE& console)
 	}
 
 	// RightSide border
-	/*CONSOLE_SCREEN_BUFFER_INFO csbi;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	GetConsoleScreenBufferInfo(console, &csbi);
 
 	COORD pos;
-	pos.X = m_pLevel->GetWidth() - 1;
+	//pos.X = m_pLevel->GetWidth() - 1;
+	pos.X = kStaticHUDTopBottomBorderWidth - 1;
 	pos.Y = csbi.dwCursorPosition.Y;
 	SetConsoleCursorPosition(console, pos);
 
-	cout << Level::WAL;*/
+	cout << Level::WAL;
 	cout << endl;
 
 	// Bottom Border
-	for (int i = 0; i < m_pLevel->GetWidth(); ++i)
+	/*for (int i = 0; i < m_pLevel->GetWidth(); ++i)
+	{
+		cout << Level::WAL;
+	}
+	cout << endl;*/
+
+	//Make Bottom Border Static for now
+	for (int i = 0; i < kStaticHUDTopBottomBorderWidth; ++i)
 	{
 		cout << Level::WAL;
 	}
