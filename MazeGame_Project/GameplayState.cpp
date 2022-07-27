@@ -23,7 +23,8 @@ constexpr int kRightArrow = 77;
 constexpr int kUpArrow = 72;
 constexpr int kDownArrow = 80;
 constexpr int kEscapeKey = 27;
-constexpr int kStaticHUDTopBottomBorderWidth = 59;
+constexpr int kSpaceBar = 32;
+constexpr int kStaticHUDTopBottomBorderWidth = 75;
 
 GameplayState::GameplayState(StateMachineExampleGame* pOwner)
 	: m_pOwner(pOwner)
@@ -108,7 +109,7 @@ bool GameplayState::Update(bool processInput)
 		}
 
 		// If position never changed
-		if (newPlayerX == m_player.GetXPosition() && newPlayerY == m_player.GetYPosition())
+		if (newPlayerX == m_player.GetXPosition() && newPlayerY == m_player.GetYPosition() && input != kSpaceBar)
 		{
 			//return false;
 		}
@@ -308,7 +309,8 @@ void GameplayState::DrawHUD(const HANDLE& console)
 	// Left Side border
 	cout << Level::WAL;
 
-	cout << " wasd-move " << Level::WAL << " z-drop key " << Level::WAL;
+	cout << " wasd-move " << Level::WAL << " z-drop key " << Level::WAL << " spacebar-wait " << Level::WAL;
+	
 
 	cout << " $:" << m_player.GetMoney() << " " << Level::WAL;
 	cout << " lives:" << m_player.GetLives() << " " << Level::WAL;
