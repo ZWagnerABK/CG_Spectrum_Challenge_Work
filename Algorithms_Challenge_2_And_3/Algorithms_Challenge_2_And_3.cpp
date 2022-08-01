@@ -13,17 +13,17 @@ int main()
     std::shared_ptr<Path> path3 = std::make_shared<Path>('D', 7);
     std::shared_ptr<Path> path4 = std::make_shared<Path>('D', 1);
 
-    std::unique_ptr<Point> aPoint = std::make_unique<Point>('A');
+    std::shared_ptr<Point> aPoint = std::make_shared<Point>('A');
     aPoint.get()->InsertPath(path1);
     aPoint.get()->InsertPath(path3);
 
-    std::unique_ptr<Point> bPoint = std::make_unique<Point>('B');
+    std::shared_ptr<Point> bPoint = std::make_shared<Point>('B');
     bPoint.get()->InsertPath(path2);
 
-    std::unique_ptr<Point> cPoint = std::make_unique<Point>('C');
+    std::shared_ptr<Point> cPoint = std::make_shared<Point>('C');
     cPoint.get()->InsertPath(path4);
 
-    std::unique_ptr<Point> dPoint = std::make_unique<Point>('D');
+    std::shared_ptr<Point> dPoint = std::make_shared<Point>('D');
 
     std::cout << aPoint.get()->toString() << std::endl;
     std::cout << bPoint.get()->toString() << std::endl;
