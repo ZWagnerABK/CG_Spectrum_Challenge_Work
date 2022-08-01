@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MazeGame_Project", "MazeGam
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MazeGame_LevelEditor", "MazeGame_LevelEditor\LevelEditor.vcxproj", "{810D8667-C0DA-4A92-9697-22A43FED4D05}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algorithms_Challenge_1", "Algorithms_Challenge_1\Algorithms_Challenge_1.vcxproj", "{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -123,6 +125,14 @@ Global
 		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Release|x64.Build.0 = Release|x64
 		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Release|x86.ActiveCfg = Release|Win32
 		{810D8667-C0DA-4A92-9697-22A43FED4D05}.Release|x86.Build.0 = Release|Win32
+		{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}.Debug|x64.ActiveCfg = Debug|x64
+		{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}.Debug|x64.Build.0 = Debug|x64
+		{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}.Debug|x86.ActiveCfg = Debug|Win32
+		{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}.Debug|x86.Build.0 = Debug|Win32
+		{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}.Release|x64.ActiveCfg = Release|x64
+		{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}.Release|x64.Build.0 = Release|x64
+		{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}.Release|x86.ActiveCfg = Release|Win32
+		{D4E0A9F1-DE1B-4CAA-BBC2-089AEAB970E6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
