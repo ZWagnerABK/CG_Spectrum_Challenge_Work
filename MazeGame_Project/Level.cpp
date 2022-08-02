@@ -212,6 +212,10 @@ PlacableActor* Level::UpdateActors(int x, int y)
 	for (auto actor = m_pActors.begin(); actor != m_pActors.end(); ++actor)
 	{
 		(*actor)->Update(); // Update all actors
+		if (!(*actor)->IsActive())
+		{
+			continue;
+		}
 
 		if (x == (*actor)->GetXPosition() && y == (*actor)->GetYPosition())
 		{

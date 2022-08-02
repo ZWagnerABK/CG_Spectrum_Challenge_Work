@@ -26,7 +26,7 @@ struct PriorityQueueItemComparator
 
 int main()
 {
-    std::cout << "Hello!  This program will attempt to run an implementation of the A* Algorithm using a pre-determined set of coordinates.\n";
+    std::cout << "Hello!  This program will attempt to run an implementation of the A* Algorithm using a pre-determined set of inter-connected points.\n";
 
     std::shared_ptr<Edge> path1 = std::make_shared<Edge>('B', 5);
     std::shared_ptr<Edge> path2 = std::make_shared<Edge>('C', 1);
