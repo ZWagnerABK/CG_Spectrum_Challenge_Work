@@ -3,7 +3,6 @@
 #include <vector>
 #include <map>
 #include <queue>
-#include <tuple>
 
 #include "Edge.h"
 #include "Point.h"
@@ -58,8 +57,7 @@ int main()
     AStarAlgo(graph, 'A', 'D');
 }
 
-
-//NOT CURRENT A*.  NEED TO ADD THAT IN NEXT 
+//Technically A*.  Heuristic is 0
 void AStarAlgo(std::map<char, std::shared_ptr<Point>>& graph, char root, char destination)
 {
     std::priority_queue<PriorityQueueItem, std::vector<PriorityQueueItem>, PriorityQueueItemComparator> priorityQueue;
@@ -82,6 +80,8 @@ void AStarAlgo(std::map<char, std::shared_ptr<Point>>& graph, char root, char de
         //If you reach your destination, leave the loop
         if (location.get()->GetID() == destination)
             break;
+        else if (costSoFar[location.get()->GetID()] > locationCost)
+            continue;
 
         int size = location.get()->GetNumEdges();
 
