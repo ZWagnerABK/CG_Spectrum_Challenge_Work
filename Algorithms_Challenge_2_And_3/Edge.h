@@ -4,18 +4,18 @@
 #include <iostream>
 
 
-class Path
+class Edge
 {
 public:
-	Path() {};
-	Path(char pointID, int cost);
+	Edge() {};
+	Edge(char pointID, int cost);
 
 	int GetCost() const { return m_cost; }
 	char GetToPointID() const { return m_toPointID; }
 
 	std::string toString();
 
-	~Path() {};
+	~Edge() {};
 
 private:
 	char m_toPointID = ' ';

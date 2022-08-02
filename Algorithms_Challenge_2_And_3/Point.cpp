@@ -6,29 +6,41 @@ Point::Point(char ID, int heuristic)
 	m_heuristic = heuristic;
 }
 
-Point::Point(char ID, std::vector<std::shared_ptr<Path>> paths, int heuristic)
+Point::Point(char ID, std::vector<std::shared_ptr<Edge>> edges, int heuristic)
 {
 	m_ID = ID;
-	m_paths = paths;
+	m_edges = edges;
 	m_heuristic = heuristic;
 }
 
-void Point::InsertPath(std::shared_ptr<Path> path)
+void Point::InsertEdge(std::shared_ptr<Edge> path)
 {
-	m_paths.push_back(std::move(path));
+	m_edges.push_back(path);
 }
 
-int Point::GetPathValue(char ID)
+int Point::GetEdgeValue(char ID)
 {
-	for (int i = 0; i < m_paths.size(); i++)
+	for (int i = 0; i < m_edges.size(); i++)
 	{
-		if (m_paths[i]->GetToPointID() == ID)
+		if (m_edges[i]->GetToPointID() == ID)
 		{
-			return m_paths[i]->GetCost();
+			return m_edges[i]->GetCost();
 		}
 	}
 
 	return -1;
+}
+
+std::shared_ptr<Edge> Point::GetEdge(int index) const
+{
+	std::shared_ptr<Edge> edge;
+
+	if (index < m_edges.size() && index >= 0)
+	{
+		edge = m_edges[index];
+	}
+
+	return edge;
 }
 
 std::string Point::toString()
@@ -40,17 +52,17 @@ std::string Point::toString()
 	display += "\n";
 	display += "---------------\n";
 
-	if (m_paths.size() == 0)
+	if (m_edges.size() == 0)
 	{
-		display += "No paths originating from this point.\n";
+		display += "No edges originating from this point.\n";
 		display += "---------------\n";
 	}
 	else
 	{
-		for (int i = 0; i < m_paths.size(); i++)
+		for (int i = 0; i < m_edges.size(); i++)
 		{
-			display += "Path " + std::to_string(i + 1) + ":\n";
-			display += m_paths[i].get()->toString();
+			display += "Edge " + std::to_string(i + 1) + ":\n";
+			display += m_edges[i].get()->toString();
 			display += "---------------\n";
 		}
 	}

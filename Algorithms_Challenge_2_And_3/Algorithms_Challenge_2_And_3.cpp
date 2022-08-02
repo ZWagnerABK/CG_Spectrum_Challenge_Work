@@ -5,11 +5,11 @@
 #include <queue>
 #include <tuple>
 
-#include "Path.h"
+#include "Edge.h"
 #include "Point.h"
 
 void AStarAlgo(std::map<char, std::shared_ptr<Point>>& graph, char root, char destination);
-std::string ReconstructPath(std::map<char, std::shared_ptr<Point>>& cameFrom, char root, char destination);
+std::string ReconstructEdge(std::map<char, std::shared_ptr<Point>>& cameFrom, char root, char destination);
 
 struct PriorityQueueItem
 {
@@ -19,7 +19,7 @@ struct PriorityQueueItem
 
 struct PriorityQueueItemComparator
 {
-    bool operator()(const PriorityQueueItem& left, const PriorityQueueItem& right)
+    bool operator ()(const PriorityQueueItem& left, const PriorityQueueItem& right)
     {
         return left.cost > right.cost;
     }
@@ -29,20 +29,20 @@ int main()
 {
     std::cout << "Hello!  This program will attempt to run an implementation of the A* Algorithm using a pre-determined set of coordinates.\n";
 
-    std::shared_ptr<Path> path1 = std::make_shared<Path>('B', 5);
-    std::shared_ptr<Path> path2 = std::make_shared<Path>('C', 1);
-    std::shared_ptr<Path> path3 = std::make_shared<Path>('D', 7);
-    std::shared_ptr<Path> path4 = std::make_shared<Path>('D', 1);
+    std::shared_ptr<Edge> path1 = std::make_shared<Edge>('B', 5);
+    std::shared_ptr<Edge> path2 = std::make_shared<Edge>('C', 1);
+    std::shared_ptr<Edge> path3 = std::make_shared<Edge>('D', 8);
+    std::shared_ptr<Edge> path4 = std::make_shared<Edge>('D', 1);
 
     std::shared_ptr<Point> aPoint = std::make_shared<Point>('A', 0);
-    aPoint.get()->InsertPath(path1);
-    aPoint.get()->InsertPath(path3);
+    aPoint.get()->InsertEdge(path1);
+    aPoint.get()->InsertEdge(path3);
 
     std::shared_ptr<Point> bPoint = std::make_shared<Point>('B', 0);
-    bPoint.get()->InsertPath(path2);
+    bPoint.get()->InsertEdge(path2);
 
     std::shared_ptr<Point> cPoint = std::make_shared<Point>('C', 0);
-    cPoint.get()->InsertPath(path4);
+    cPoint.get()->InsertEdge(path4);
 
     std::shared_ptr<Point> dPoint = std::make_shared<Point>('D', 0);
 
@@ -74,6 +74,8 @@ void AStarAlgo(std::map<char, std::shared_ptr<Point>>& graph, char root, char de
     while (!priorityQueue.empty())
     {
         auto priorityQueueItem = priorityQueue.top();
+        priorityQueue.pop();
+
         std::shared_ptr<Point> location = priorityQueueItem.location;
         int locationCost = priorityQueueItem.cost;
         
@@ -81,32 +83,31 @@ void AStarAlgo(std::map<char, std::shared_ptr<Point>>& graph, char root, char de
         if (location.get()->GetID() == destination)
             break;
 
-        int size = location.get()->GetNumPaths();
-        auto paths = location.get()->GetPaths();
+        int size = location.get()->GetNumEdges();
 
         //Loop through the current point's neighbors through its paths
         for (int i = 0; i < size; i++)
         {
-            char nextID = paths[i]->GetToPointID();
+            auto currentEdge = location.get()->GetEdge(i);
+            char nextID = currentEdge.get()->GetToPointID();
+            int cost = currentEdge.get()->GetCost();
 
             //Add cost of the current location with the cost of the current neighbor
-            int newCost = costSoFar[location.get()->GetID()] + paths[i]->GetCost();
+            int newCost = costSoFar[location.get()->GetID()] + cost;
 
             if (costSoFar.find(nextID) == costSoFar.end() || newCost < costSoFar[nextID])
             {
-                costSoFar[paths[i]->GetToPointID()] = newCost;
+                costSoFar[nextID] = newCost;
                 priorityQueue.push({ newCost, graph.at(nextID) });
                 cameFrom[nextID] = location;
             }
         }
-
-        priorityQueue.pop();
     }
 
-    std::cout << ReconstructPath(cameFrom, root, destination) << std::endl;
+    std::cout << ReconstructEdge(cameFrom, root, destination) << std::endl;
 }
 
-std::string ReconstructPath(std::map<char, std::shared_ptr<Point>>& cameFrom, char root, char destination)
+std::string ReconstructEdge(std::map<char, std::shared_ptr<Point>>& cameFrom, char root, char destination)
 {
 
     char currentLocation = destination;
@@ -120,7 +121,7 @@ std::string ReconstructPath(std::map<char, std::shared_ptr<Point>>& cameFrom, ch
         path += " ";
 
         nextLocation = cameFrom[currentLocation]->GetID();
-        cost += cameFrom[currentLocation]->GetPathValue(currentLocation);
+        cost += cameFrom[currentLocation]->GetEdgeValue(currentLocation);
         currentLocation = nextLocation;
     }
 

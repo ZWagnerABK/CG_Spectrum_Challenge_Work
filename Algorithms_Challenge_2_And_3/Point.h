@@ -3,29 +3,31 @@
 #include <memory>
 #include <string>
 
-#include "Path.h"
+#include "Edge.h"
 
 class Point
 {
 	public:
 		Point() {};
 		Point(char ID, int heuristic);
-		Point(char ID, std::vector<std::shared_ptr<Path>> paths, int heuristic);
+		Point(char ID, std::vector<std::shared_ptr<Edge>> paths, int heuristic);
 
 		char GetID() const { return m_ID; }
-		int GetNumPaths() const { return m_paths.size(); }
-		std::vector<std::shared_ptr<Path>> GetPaths() const { return m_paths; }
-		int GetPathValue(char ID);
+		int GetNumEdges() const { return m_edges.size(); }
+		std::vector<std::shared_ptr<Edge>> GetEdges() const { return m_edges; }
+		int GetEdgeValue(char ID);
+
+		std::shared_ptr<Edge> GetEdge(int index) const;
 
 		std::string toString();
 
-		void InsertPath(std::shared_ptr<Path> path);
+		void InsertEdge(std::shared_ptr<Edge> edge);
 
 		~Point() = default;
 
 	private:
 		char m_ID = ' ';
 		int m_heuristic = 0;
-		std::vector<std::shared_ptr<Path>> m_paths;
+		std::vector<std::shared_ptr<Edge>> m_edges;
 };
 
