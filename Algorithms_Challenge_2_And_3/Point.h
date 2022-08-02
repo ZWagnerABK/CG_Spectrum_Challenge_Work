@@ -9,10 +9,13 @@ class Point
 {
 	public:
 		Point() {};
-		Point(char ID);
-		Point(char ID, std::vector<std::shared_ptr<Path>> paths);
+		Point(char ID, int heuristic);
+		Point(char ID, std::vector<std::shared_ptr<Path>> paths, int heuristic);
 
 		char GetID() const { return m_ID; }
+		int GetNumPaths() const { return m_paths.size(); }
+		std::vector<std::shared_ptr<Path>> GetPaths() const { return m_paths; }
+		int GetPathValue(char ID);
 
 		std::string toString();
 
@@ -22,6 +25,7 @@ class Point
 
 	private:
 		char m_ID = ' ';
+		int m_heuristic = 0;
 		std::vector<std::shared_ptr<Path>> m_paths;
 };
 
