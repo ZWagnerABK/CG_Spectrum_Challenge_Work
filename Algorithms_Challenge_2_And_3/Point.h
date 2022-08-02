@@ -14,6 +14,7 @@ class Point
 
 		char GetID() const { return m_ID; }
 		int GetNumEdges() const { return m_edges.size(); }
+		int GetHeuristic() const { return m_heuristic;  }
 		std::vector<std::shared_ptr<Edge>> GetEdges() const { return m_edges; }
 		int GetEdgeValue(char ID);
 

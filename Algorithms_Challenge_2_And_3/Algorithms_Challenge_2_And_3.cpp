@@ -97,7 +97,7 @@ void AStarAlgo(std::map<char, std::shared_ptr<Point>>& graph, char root, char de
 
             if (costSoFar.find(nextID) == costSoFar.end() || newCost < costSoFar[nextID])
             {
-                costSoFar[nextID] = newCost;
+                costSoFar[nextID] = newCost + location.get()->GetHeuristic();
                 priorityQueue.push({ newCost, graph.at(nextID) });
                 cameFrom[nextID] = location;
             }
