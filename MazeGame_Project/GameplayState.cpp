@@ -14,6 +14,7 @@
 #include "Utility.h"
 #include "Shield.h"
 #include "StateMachineExampleGame.h"
+#include "CollisionHelper.h"
 
 using namespace std;
 
@@ -163,107 +164,21 @@ void GameplayState::HandleCollision(int newPlayerX, int newPlayerY)
 	PlacableActor* collidedActor = m_pLevel->UpdateActors(newPlayerX, newPlayerY);
 	if (collidedActor != nullptr)
 	{
-		switch (collidedActor->GetType())
+		CollisionHelper::CollisionInfo collisionState =
 		{
-		case ActorType::Enemy:
-		{
-			Enemy* collidedEnemy = dynamic_cast<Enemy*>(collidedActor);
-			assert(collidedEnemy);
+			m_player,
+			m_DidBeatLevel,
+			newPlayerX,
+			newPlayerY,
+			StateMachineExampleGame::SceneName::None
+		};
 
-			collidedEnemy->Remove();
-			m_player.SetPosition(newPlayerX, newPlayerY);
+		CollisionHelper::HandleCollision(collidedActor, collisionState);
+		m_DidBeatLevel = collisionState.didBeatLevel;
 
-			if (m_player.HasShield())
-			{
-				AudioManager::GetInstance()->PlayShieldUseSound();
-				m_player.UseShield();
-			}
-			else
-			{
-				AudioManager::GetInstance()->PlayLoseLivesSound();
-				m_player.DecrementLives();
-				if (m_player.GetLives() < 0)
-				{
-					//TODO: Go to game over screen
-					AudioManager::GetInstance()->PlayLoseSound();
-					m_pOwner->LoadScene(StateMachineExampleGame::SceneName::Lose);
-				}
-			}
-			
-			break;
-		}
-		case ActorType::Money:
+		if (collisionState.newScene != StateMachineExampleGame::SceneName::None)
 		{
-			Money* collidedMoney = dynamic_cast<Money*>(collidedActor);
-			assert(collidedMoney);
-			AudioManager::GetInstance()->PlayMoneySound();
-			collidedMoney->Remove();
-			m_player.AddMoney(collidedMoney->GetWorth());
-			m_player.SetPosition(newPlayerX, newPlayerY);
-			break;
-		}
-		case ActorType::Key:
-		{
-			Key* collidedKey = dynamic_cast<Key*>(collidedActor);
-			assert(collidedKey);
-			if (!m_player.HasKey())
-			{
-				m_player.PickupKey(collidedKey);
-				collidedKey->Remove();
-				m_player.SetPosition(newPlayerX, newPlayerY);
-				AudioManager::GetInstance()->PlayKeyPickupSound();
-			}
-			break;
-		}
-		case ActorType::Shield:
-		{
-			Shield* collidedShield = dynamic_cast<Shield*>(collidedActor);
-			assert(collidedShield);
-			if (!m_player.HasShield())
-			{
-				m_player.PickupShield(collidedShield);
-				collidedShield->Remove();
-				m_player.SetPosition(newPlayerX, newPlayerY);
-				AudioManager::GetInstance()->PlayShieldPickupSound();
-			}
-			break;
-		}
-		case ActorType::Door:
-		{
-			Door* collidedDoor = dynamic_cast<Door*>(collidedActor);
-			assert(collidedDoor);
-			if (!collidedDoor->IsOpen())
-			{
-				if (m_player.HasKey(collidedDoor->GetColor()))
-				{
-					collidedDoor->Open();
-					collidedDoor->Remove();
-					m_player.UseKey();
-					m_player.SetPosition(newPlayerX, newPlayerY);
-					AudioManager::GetInstance()->PlayDoorOpenSound();
-				}
-				else
-				{
-					AudioManager::GetInstance()->PlayDoorClosedSound();
-				}
-			}
-			else
-			{
-				m_player.SetPosition(newPlayerX, newPlayerY);
-			}
-			break;
-		}
-		case ActorType::Goal:
-		{
-			Goal* collidedGoal = dynamic_cast<Goal*>(collidedActor);
-			assert(collidedGoal);
-			collidedGoal->Remove();
-			m_player.SetPosition(newPlayerX, newPlayerY);
-			m_DidBeatLevel = true;
-			break;
-		}
-		default:
-			break;
+			m_pOwner->LoadScene(collisionState.newScene);
 		}
 	}
 	else if (m_pLevel->IsSpace(newPlayerX, newPlayerY)) // no collision

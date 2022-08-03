@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algorithms_Challenge_1", "A
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algorithms_Challenge_2_And_3", "Algorithms_Challenge_2_And_3\Algorithms_Challenge_2_And_3.vcxproj", "{2280C343-50F9-4860-ACEC-4F2C9BD3230E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Multithreading_Challenge_1", "Multithreading_Challenge_1\Multithreading_Challenge_1.vcxproj", "{3DDAA274-AA16-4F8F-9988-CC56E0083414}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -143,6 +145,14 @@ Global
 		{2280C343-50F9-4860-ACEC-4F2C9BD3230E}.Release|x64.Build.0 = Release|x64
 		{2280C343-50F9-4860-ACEC-4F2C9BD3230E}.Release|x86.ActiveCfg = Release|Win32
 		{2280C343-50F9-4860-ACEC-4F2C9BD3230E}.Release|x86.Build.0 = Release|Win32
+		{3DDAA274-AA16-4F8F-9988-CC56E0083414}.Debug|x64.ActiveCfg = Debug|x64
+		{3DDAA274-AA16-4F8F-9988-CC56E0083414}.Debug|x64.Build.0 = Debug|x64
+		{3DDAA274-AA16-4F8F-9988-CC56E0083414}.Debug|x86.ActiveCfg = Debug|Win32
+		{3DDAA274-AA16-4F8F-9988-CC56E0083414}.Debug|x86.Build.0 = Debug|Win32
+		{3DDAA274-AA16-4F8F-9988-CC56E0083414}.Release|x64.ActiveCfg = Release|x64
+		{3DDAA274-AA16-4F8F-9988-CC56E0083414}.Release|x64.Build.0 = Release|x64
+		{3DDAA274-AA16-4F8F-9988-CC56E0083414}.Release|x86.ActiveCfg = Release|Win32
+		{3DDAA274-AA16-4F8F-9988-CC56E0083414}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
