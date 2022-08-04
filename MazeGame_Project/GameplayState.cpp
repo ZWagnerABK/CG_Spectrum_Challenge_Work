@@ -100,6 +100,8 @@ void GameplayState::ProcessInput()
 	}
 	else if (input == kEscapeKey)
 	{
+		m_DidBeatLevel = true;
+		m_CVSleep.notify_all();
 		m_pOwner->LoadScene(StateMachineExampleGame::SceneName::MainMenu);
 	}
 	else if ((char)input == 'Z' || (char)input == 'z')

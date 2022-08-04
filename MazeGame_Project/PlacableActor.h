@@ -33,7 +33,6 @@ public:
 	int GetYPosition();
 	int* GetXPositionPointer();
 	int* GetYPositionPointer();
-	void SetPosition(int x, int y);
 
 	ActorColor GetColor() { return m_color; }
 
@@ -42,6 +41,8 @@ public:
 	void Place(int x, int y);
 
 	virtual ActorType GetType() = 0;
+
+	virtual void SetPosition(int x, int y);
 	virtual void Draw() = 0;
 	virtual void Update()
 	{

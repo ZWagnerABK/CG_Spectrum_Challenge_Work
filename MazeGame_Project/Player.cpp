@@ -48,11 +48,31 @@ void Player::DropKey()
 	if (m_pCurrentKey)
 	{
 		AudioManager::GetInstance()->PlayKeyDropSound();
-		m_pCurrentKey->Place(m_pPosition->x, m_pPosition->y);
+
+		switch (m_lastDirection)
+		{
+			case LAST_DIRECTION::NONE:
+				m_pCurrentKey->Place(m_pPosition->x, m_pPosition->y);
+				break;
+			case LAST_DIRECTION::UP:
+				m_pCurrentKey->Place(m_pPosition->x, m_pPosition->y - 1);
+				break;
+			case LAST_DIRECTION::DOWN:
+				m_pCurrentKey->Place(m_pPosition->x, m_pPosition->y + 1);
+				break;
+			case LAST_DIRECTION::LEFT:
+				m_pCurrentKey->Place(m_pPosition->x - 1, m_pPosition->y);
+				break;
+			case LAST_DIRECTION::RIGHT:
+				m_pCurrentKey->Place(m_pPosition->x + 1, m_pPosition->y);
+				break;
+			default:
+				m_pCurrentKey->Place(m_pPosition->x, m_pPosition->y);
+		}
+		
 		m_pCurrentKey = nullptr;
 	}
 }
-
 
 void Player::PickupShield(Shield* shield)
 {
@@ -86,6 +106,28 @@ void Player::ResetItems()
 		m_pCurrentKey->Remove();
 		m_pCurrentKey = nullptr;
 	}
+}
+
+void Player::SetPosition(int x, int y)
+{
+	if (x > m_pPosition->x && y == m_pPosition->y)
+	{
+		m_lastDirection = LAST_DIRECTION::LEFT;
+	}
+	else if (x == m_pPosition->x && y > m_pPosition->y)
+	{
+		m_lastDirection = LAST_DIRECTION::UP;
+	}
+	else if (x == m_pPosition->x && y < m_pPosition->y)
+	{
+		m_lastDirection = LAST_DIRECTION::DOWN;
+	}
+	else
+	{
+		m_lastDirection = LAST_DIRECTION::RIGHT;
+	}
+
+	PlacableActor::SetPosition(x, y);
 }
 
 void Player::Draw()

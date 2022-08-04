@@ -49,6 +49,7 @@ private:
 	std::mutex m_CollisionGuard;
 	std::mutex m_DrawGuard;
 	std::mutex m_CVSleepGuard;
+	std::mutex m_ProcessInputGuard;
 
 	std::condition_variable m_CVSleep;
 };
