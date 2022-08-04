@@ -6,6 +6,9 @@
 #include <windows.h>
 #include <vector>
 #include <string>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 class StateMachineExampleGame;
 
@@ -37,7 +40,15 @@ protected:
 	void CheckBeatLevel();
 
 private:
-	void HandleCollision(int newPlayerX, int newPlayerY);
+	void RedrawThreadingInitial();
+	void ProcessInputThreadingInitial();
+	void HandleCollision(int newPlayerX, int newPlayerY, bool processInput = false);
 	bool Load();
 	void DrawHUD(const HANDLE& console);
+
+	std::mutex m_CollisionGuard;
+	std::mutex m_DrawGuard;
+	std::mutex m_CVSleepGuard;
+
+	std::condition_variable m_CVSleep;
 };

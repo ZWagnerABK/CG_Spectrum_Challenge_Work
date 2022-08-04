@@ -217,13 +217,37 @@ PlacableActor* Level::UpdateActors(int x, int y)
 			continue;
 		}
 
-		if (x == (*actor)->GetXPosition() && y == (*actor)->GetYPosition())
-		{
-			// should only be able to collide with one actor
-			assert(collidedActor == nullptr);
-			collidedActor = (*actor);
-		}
+		if (collidedActor == nullptr)
+			IsCollisionOccuring(x, y, (*actor), collidedActor);
 	}
 
 	return collidedActor;
+}
+
+//Checks for a collision and returns the colliding actor if there is one.
+PlacableActor* Level::CheckForCollidedActor(int x, int y)
+{
+	PlacableActor* collidedActor = nullptr;
+
+	for(auto actor = m_pActors.begin(); actor != m_pActors.end(); ++actor)
+	{
+		//Should only be one collision at a time for a player
+		if (IsCollisionOccuring(x, y, (*actor), collidedActor))
+			break;
+	}
+
+	return collidedActor;
+}
+
+bool Level::IsCollisionOccuring(int x, int y, PlacableActor* actor, PlacableActor*& previousCollision)
+{
+	if (x == actor->GetXPosition() && y == actor->GetYPosition())
+	{
+		assert(previousCollision == nullptr);
+		previousCollision = actor;
+
+		return true;
+	}
+
+	return false;
 }

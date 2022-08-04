@@ -114,7 +114,7 @@ void GameplayState::ProcessInput()
 	}
 	else
 	{
-		HandleCollision(newPlayerX, newPlayerY);
+		HandleCollision(newPlayerX, newPlayerY, true);
 	}
 }
 
@@ -149,9 +149,13 @@ void GameplayState::CheckBeatLevel()
 
 bool GameplayState::Update(bool processInput)
 {
-	if (processInput && !m_DidBeatLevel)
+	if (!m_DidBeatLevel && processInput)
 	{
-		ProcessInput();
+		std::thread RedrawThread([this] { this->RedrawThreadingInitial(); });
+		std::thread ProcessInputThread([this] { this->ProcessInputThreadingInitial(); });
+
+		RedrawThread.join();
+		ProcessInputThread.join();
 	}
 
 	CheckBeatLevel();
@@ -159,40 +163,90 @@ bool GameplayState::Update(bool processInput)
 	return false;
 }
 
-void GameplayState::HandleCollision(int newPlayerX, int newPlayerY)
+void GameplayState::RedrawThreadingInitial()
 {
-	PlacableActor* collidedActor = m_pLevel->UpdateActors(newPlayerX, newPlayerY);
-	if (collidedActor != nullptr)
+	while (!m_DidBeatLevel && m_player.GetLives() >= 0)
 	{
-		CollisionHelper::CollisionInfo collisionState =
-		{
-			m_player,
-			m_DidBeatLevel,
-			newPlayerX,
-			newPlayerY,
-			StateMachineExampleGame::SceneName::None
-		};
+		std::unique_lock<std::mutex> CVSleepGuard(m_CVSleepGuard);
+		m_CVSleep.wait_for(CVSleepGuard, 1000ms, [this] { return this->m_DidBeatLevel == true; });
+		HandleCollision(m_player.GetXPosition(), m_player.GetYPosition());
+		Draw();
+	}
+}
 
-		CollisionHelper::HandleCollision(collidedActor, collisionState);
-		m_DidBeatLevel = collisionState.didBeatLevel;
+void GameplayState::ProcessInputThreadingInitial()
+{
+	while (!m_DidBeatLevel && m_player.GetLives() >= 0)
+	{
+		ProcessInput();
+		Draw();
+	}
+}
 
-		if (collisionState.newScene != StateMachineExampleGame::SceneName::None)
+void GameplayState::HandleCollision(int newPlayerX, int newPlayerY, bool processInput)
+{
+	std::lock_guard<std::mutex> CollisionGuard(m_CollisionGuard);
+	if (!m_DidBeatLevel && !processInput)
+	{
+		PlacableActor* collidedActor = m_pLevel->UpdateActors(newPlayerX, newPlayerY);
+		if (collidedActor != nullptr)
 		{
-			m_pOwner->LoadScene(collisionState.newScene);
+			CollisionHelper::CollisionInfo collisionState =
+			{
+				m_player,
+				m_DidBeatLevel,
+				newPlayerX,
+				newPlayerY,
+				StateMachineExampleGame::SceneName::None
+			};
+
+			CollisionHelper::HandleCollision(collidedActor, collisionState);
+			m_DidBeatLevel = collisionState.didBeatLevel;
+			m_CVSleep.notify_all();
+
+			if (collisionState.newScene != StateMachineExampleGame::SceneName::None)
+			{
+				m_pOwner->LoadScene(collisionState.newScene);
+			}
 		}
 	}
-	else if (m_pLevel->IsSpace(newPlayerX, newPlayerY)) // no collision
+	else if (!m_DidBeatLevel && processInput)
 	{
-		m_player.SetPosition(newPlayerX, newPlayerY);
-	}
-	else if (m_pLevel->IsWall(newPlayerX, newPlayerY))
-	{
-		// wall collision, do nothing
+		PlacableActor* collidedActor = m_pLevel->CheckForCollidedActor(newPlayerX, newPlayerY);
+		if (collidedActor != nullptr)
+		{
+			CollisionHelper::CollisionInfo collisionState =
+			{
+				m_player,
+				m_DidBeatLevel,
+				newPlayerX,
+				newPlayerY,
+				StateMachineExampleGame::SceneName::None
+			};
+
+			CollisionHelper::HandleCollision(collidedActor, collisionState);
+			m_DidBeatLevel = collisionState.didBeatLevel;
+			m_CVSleep.notify_all();
+
+			if (collisionState.newScene != StateMachineExampleGame::SceneName::None)
+			{
+				m_pOwner->LoadScene(collisionState.newScene);
+			}
+		}
+		else if (m_pLevel->IsSpace(newPlayerX, newPlayerY)) // no collision
+		{
+			m_player.SetPosition(newPlayerX, newPlayerY);
+		}
+		else if (m_pLevel->IsWall(newPlayerX, newPlayerY))
+		{
+			// wall collision, do nothing
+		}
 	}
 }
 
 void GameplayState::Draw()
 {
+	std::lock_guard<std::mutex> DrawGuard(m_DrawGuard);
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	system("cls");
 
