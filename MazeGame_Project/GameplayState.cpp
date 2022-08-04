@@ -151,6 +151,7 @@ bool GameplayState::Update(bool processInput)
 {
 	if (!m_DidBeatLevel && processInput)
 	{
+		// TODO:  Add Draw Thread seperate from Update
 		std::thread RedrawThread([this] { this->RedrawThreadingInitial(); });
 		std::thread ProcessInputThread([this] { this->ProcessInputThreadingInitial(); });
 
@@ -169,6 +170,7 @@ void GameplayState::RedrawThreadingInitial()
 	{
 		std::unique_lock<std::mutex> CVSleepGuard(m_CVSleepGuard);
 		m_CVSleep.wait_for(CVSleepGuard, 1000ms, [this] { return this->m_DidBeatLevel == true; });
+
 		HandleCollision(m_player.GetXPosition(), m_player.GetYPosition());
 		Draw();
 	}

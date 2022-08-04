@@ -22,6 +22,7 @@ void Game::RunGameLoop()
 	while (!isGameOver)
 	{
 		// update with no input
+		// TODO:  Remove this Update call
 		Update(false);
 		// Draw
 		Draw();

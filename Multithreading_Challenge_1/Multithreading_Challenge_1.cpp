@@ -1,20 +1,102 @@
-// Multithreading_Challenge_1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <thread>
+#include <mutex>
+
+
+bool DidQuit = false;
+bool ShouldDecrementLife = false;
+std::mutex Mutex;
+
+struct Character
+{
+    float Position = 0.0f;
+    std::atomic<int> Score = 0;
+    //int Score = 0;
+    int Lives = 1;
+
+    void DisplayStats()
+    {
+        std::cout << "Lives: " << Lives << std::endl;
+    }
+};
+
+Character Player;
+
+void UpdateCharacter1()
+{
+    while (!DidQuit)
+    {
+        std::cout << "There" << std::endl;
+        if (ShouldDecrementLife)
+        {
+            std::lock_guard<std::mutex> Guard(Mutex);
+            if (Player.Lives > 0)
+            {
+
+                //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                //std::this_thread::yield();
+                --Player.Lives;
+            }
+        }
+    }
+}
+
+void UpdateCharacter2()
+{
+    while (!DidQuit)
+    {
+        std::cout << "Here" << std::endl;
+        if (ShouldDecrementLife)
+        {
+            std::lock_guard<std::mutex> Guard(Mutex);
+            if (Player.Lives > 0)
+            {
+
+                //this_thread::sleep_for(chrono::milliseconds(500));
+                //std::this_thread::yield();
+                --Player.Lives;
+            }
+        }
+    }
+}
+
+void ProcessInput()
+{
+    while (!DidQuit)
+    {
+        std::cout << "'a' to decrement player life" << std::endl;
+        std::cout << "'d' to display player stats" << std::endl;
+        std::cout << "'q' to quit" << std::endl;
+
+        char UserInput;
+        std::cin >> UserInput;
+
+        switch (UserInput)
+        {
+        case 'a':
+            ShouldDecrementLife = true;
+            break;
+        case 'd':
+            Player.DisplayStats();
+            break;
+        case 'q':
+            DidQuit = true;
+            break;
+        default:
+            break;
+        }
+
+        DidQuit = (UserInput == 'q');
+    }
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::thread InputHandler(ProcessInput);
+    std::thread CharacterUpdate1(UpdateCharacter1);
+    std::thread CharacterUpdate2(UpdateCharacter2);
+
+    InputHandler.join();
+
+    return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
