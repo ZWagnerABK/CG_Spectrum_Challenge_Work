@@ -2,19 +2,25 @@
 #include <iostream>
 #include <string>
 #include <functional>
+#include <thread>
 
 ENetAddress address;
 ENetHost* server;
 std::string serverUsername = "";
+int ConnectedToClient = 0;
 
 const char* kEnterServerUserName = "Enter a name for the server user: ";
 
 bool CreateServer();
+
 void UserInput(std::string, std::function<bool(std::string)>, std::string &storage);
+void UserInputThread();
 
 void DisplayConnectionMessage(ENetEvent);
+void DisplayDisconnectMessage(ENetEvent);
+
 std::string GetUsernameInputFormatted(std::string username);
-void SendPacket();
+void SendPacket(std::string message);
 void SetupChatroomDisplay();
 
 int main()
@@ -36,27 +42,28 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    UserInput(kEnterServerUserName, [](std::string input) { return input != ""; }, serverUsername);
+    std::cout << "Server startup complete!  Waiting for clients to connect. . .\n";
 
     ENetEvent event;
-    while (enet_host_service(server, &event, 30000) > 0)
+    while (enet_host_service(server, &event, 1200000) > 0)
     {
         switch (event.type)
         {
             case ENET_EVENT_TYPE_CONNECT:
                 DisplayConnectionMessage(event);
-                event.peer->data = (void*)("Client information");
-
-                SetupChatroomDisplay();
-                SendPacket();
+                //event.peer->data = (void*)("Client information");
+                ConnectedToClient++;
 
                 break;
             case ENET_EVENT_TYPE_RECEIVE:
                 std::cout << event.packet->data << std::endl;
+                SendPacket((char*)event.packet->data);
                 enet_packet_destroy(event.packet);
 
-                SendPacket();
-
+                break;
+            case ENET_EVENT_TYPE_DISCONNECT:
+                DisplayDisconnectMessage(event);
+                ConnectedToClient--;
                 break;
         }
     }
@@ -119,6 +126,14 @@ void DisplayConnectionMessage(ENetEvent event)
         << "\n";
 }
 
+void DisplayDisconnectMessage(ENetEvent event)
+{
+    std::cout << "The client from "
+        << event.peer->address.host
+        << ":" << event.peer->address.port
+        << " has disconnected.\n";
+}
+
 std::string GetUsernameInputFormatted(std::string username)
 {
     std::string message = "";
@@ -128,9 +143,9 @@ std::string GetUsernameInputFormatted(std::string username)
     return message;
 }
 
-void SendPacket()
+void SendPacket(std::string message)
 {
-    std::string message = "";
+    /*std::string message = "";
     std::string packetMessage = "";
 
     message = GetUsernameInputFormatted(serverUsername);
@@ -139,11 +154,11 @@ void SendPacket()
 
     packetMessage = message + packetMessage;
 
-    const char* sendMessage = packetMessage.c_str();
+    const char* sendMessage = packetMessage.c_str();*/
 
     /* Create a reliable packet of size 7 containing "packet\0" */
-    ENetPacket* packet = enet_packet_create(sendMessage,
-        strlen(sendMessage) + 1,
+    ENetPacket* packet = enet_packet_create(message.c_str(),
+        strlen(message.c_str()) + 1,
         ENET_PACKET_FLAG_RELIABLE);
 
     /* Extend the packet so and append the string "foo", so it now */
