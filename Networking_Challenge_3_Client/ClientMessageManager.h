@@ -19,6 +19,6 @@ class ClientMessageManager
 	private:
 		std::unique_ptr<ClientConsoleManager> m_ConsoleManager;
 		std::string m_clientUsername;
-		const char* m_kWelcomeToChatRoomMessage = "Welcome to the chat room!";
+		const char* m_kWelcomeMessage = "Welcome to the number guessing game!";
 };
 

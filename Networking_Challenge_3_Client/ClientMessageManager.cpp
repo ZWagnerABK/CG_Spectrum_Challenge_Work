@@ -10,7 +10,7 @@ void ClientMessageManager::SetupChatroomDisplay()
 {
     m_ConsoleManager->ResetConsole();
 
-    std::cout << m_kWelcomeToChatRoomMessage << std::endl;
+    std::cout << m_kWelcomeMessage << std::endl;
 }
 
 void ClientMessageManager::SetClientUsername(std::string message, std::function<bool(std::string)> condition, std::string& storage)

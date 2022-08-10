@@ -15,7 +15,7 @@ const char* g_kENetInitializingErrorMessage = "An error occurred while initializ
 const char* g_kENetNoPeerAvialable = "No available peers for initiating an ENet connection.\n";
 const char* g_kEnterUserName = "Enter a name for the client user: ";
 
-const char* g_kENetConnectionSuccess = "Connection to 127.0.0.1:1234 succeeded.";
+const char* g_kENetConnectionSuccess = "Connection to 127.0.0.1:1234 succeeded.  Waiting for other player to join.";
 const char* g_kENetConnectionFailure = "Connection 127.0.0.1:1234 failed.";
 
 int InitializeClient();
@@ -38,8 +38,6 @@ int main()
     ENetEvent event;
     ConnectToServer(event);
 
-    messageManager.SetupChatroomDisplay();
-
     while (enet_host_service(g_client, &event, 1200000) > 0)
     {
         switch (event.type)
@@ -47,6 +45,7 @@ int main()
             case ENET_EVENT_TYPE_RECEIVE:
                 //AddMessageToLogQueue((char*)event.packet->data);
                 enet_packet_destroy(event.packet);
+                //messageManager.SetupChatroomDisplay();
 
                 break;
         }
