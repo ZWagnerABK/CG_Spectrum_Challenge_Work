@@ -3,8 +3,10 @@
 #include <memory>
 #include <functional>
 #include <string>
-
-#include "ClientConsoleManager.h"
+#include <format>
+#include <string_view>
+#include <iostream>
+#include "ClientConsole.h"
 
 class ClientMessageManager
 {
@@ -12,13 +14,17 @@ class ClientMessageManager
 		ClientMessageManager();
 		~ClientMessageManager() {};
 
-		void SetupChatroomDisplay();
+		void SetupGuessingRoomDisplay();
 		void SetClientUsername(std::string message, std::function<bool(std::string)> condition, std::string& storage);
+
 		void UserInput(std::string message, std::function<bool(std::string)> condition, std::string& storage);
+		void UserInput(std::string message, std::function<bool(int)> condition, int& storage);
+
+		void DisplayWrongGuessMessage(bool didIGuessWrong, std::string otherUsername, int wrongGuess);
+		void DisplayCorrectGuessMessage(bool didIGuessWrong, std::string otherUsername, int wrongGuess);
 
 	private:
-		std::unique_ptr<ClientConsoleManager> m_ConsoleManager;
+		std::unique_ptr<ClientConsole> m_Console;
 		std::string m_clientUsername;
-		const char* m_kWelcomeMessage = "Welcome to the number guessing game!";
 };
 

@@ -8,7 +8,9 @@ class GuessingGame
 		GuessingGame() = delete;
 		~GuessingGame() {};
 
-		bool isGuessCorrect(int guess);
+		int GetGuessingNumber();
+
+		bool IsGuessCorrect(int guess);
 
 	private:
 		int m_guessingNumber = 0;

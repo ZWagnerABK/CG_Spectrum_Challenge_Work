@@ -11,7 +11,12 @@ GuessingGame::GuessingGame(int lowerLimit, int upperLimit)
 	m_guessingNumber = (rand() + lowerLimit) % upperLimit;
 }
 
-bool GuessingGame::isGuessCorrect(int guess)
+int GuessingGame::GetGuessingNumber()
+{
+	return m_guessingNumber;
+}
+
+bool GuessingGame::IsGuessCorrect(int guess)
 {
 	if (guess == m_guessingNumber)
 	{

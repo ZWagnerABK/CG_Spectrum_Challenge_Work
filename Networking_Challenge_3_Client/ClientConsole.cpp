@@ -1,13 +1,13 @@
-#include "ClientConsoleManager.h"
+#include "ClientConsole.h"
 #include <iostream>
 #include <windows.h>
 
-void ClientConsoleManager::SetClientUsernameLength(int length)
+void ClientConsole::SetClientUsernameLength(int length)
 {
     m_clientUsernameLength = length;
 }
 
-void ClientConsoleManager::ResetConsole()
+void ClientConsole::ResetConsole()
 {
     system("cls");
 
@@ -18,7 +18,20 @@ void ClientConsoleManager::ResetConsole()
     m_currentLogYPos = m_logStartYPos + 1;
 }
 
-void ClientConsoleManager::EraseConsoleLine()
+void ClientConsole::RepositionToLogPostion()
+{
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD c = { m_currentLogXPos , m_currentLogYPos };
+
+    SetConsoleCursorPosition(h, c);
+}
+
+void ClientConsole::IncremenetLogPosition()
+{
+    m_currentLogYPos++;
+}
+
+void ClientConsole::EraseConsoleLine()
 {
     std::cout << "\33[2K";// Delete current line
     // i=1 because we included the first line
@@ -28,7 +41,7 @@ void ClientConsoleManager::EraseConsoleLine()
     std::cout << "\r"; // Resume the cursor at beginning of line
 }
 
-void ClientConsoleManager::RepositionInputCursor(bool initial = false)
+void ClientConsole::RepositionInputCursor(bool initial = false)
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
 

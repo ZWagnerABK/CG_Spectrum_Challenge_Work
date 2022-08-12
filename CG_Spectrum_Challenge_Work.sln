@@ -44,8 +44,16 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Networking_Challenge_2_Server", "Networking_Challenge_2_Server\Networking_Challenge_2_Server.vcxproj", "{31DEF202-0CE6-4618-B909-0CEB9E48A365}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Networking_Challenge_3_Server", "Networking_Challenge_3_Server\Networking_Challenge_3_Server.vcxproj", "{86A7E5B1-6D96-4CDA-A1B6-AF7BEF1746B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D} = {C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Networking_Challenge_3_Client", "Networking_Challenge_3_Client\Networking_Challenge_3_Client.vcxproj", "{23E6BF88-A523-4BE5-BEAC-A1039CF461DF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D} = {C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Networking_Challenge_3_Common", "Networking_Challenge_3_Common\Networking_Challenge_3_Common.vcxproj", "{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -215,6 +223,14 @@ Global
 		{23E6BF88-A523-4BE5-BEAC-A1039CF461DF}.Release|x64.Build.0 = Release|x64
 		{23E6BF88-A523-4BE5-BEAC-A1039CF461DF}.Release|x86.ActiveCfg = Release|Win32
 		{23E6BF88-A523-4BE5-BEAC-A1039CF461DF}.Release|x86.Build.0 = Release|Win32
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}.Debug|x64.ActiveCfg = Debug|x64
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}.Debug|x64.Build.0 = Debug|x64
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}.Debug|x86.ActiveCfg = Debug|Win32
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}.Debug|x86.Build.0 = Debug|Win32
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}.Release|x64.ActiveCfg = Release|x64
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}.Release|x64.Build.0 = Release|x64
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}.Release|x86.ActiveCfg = Release|Win32
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -228,6 +244,7 @@ Global
 		{31DEF202-0CE6-4618-B909-0CEB9E48A365} = {6C737662-DE97-479A-ABB4-A629EA4C44BB}
 		{86A7E5B1-6D96-4CDA-A1B6-AF7BEF1746B6} = {6C737662-DE97-479A-ABB4-A629EA4C44BB}
 		{23E6BF88-A523-4BE5-BEAC-A1039CF461DF} = {6C737662-DE97-479A-ABB4-A629EA4C44BB}
+		{C486D9C9-6E7E-49F3-9FAC-D51CCF47E01D} = {6C737662-DE97-479A-ABB4-A629EA4C44BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1AA9A7C-BAE3-4753-8AAC-C0087C23D8A5}

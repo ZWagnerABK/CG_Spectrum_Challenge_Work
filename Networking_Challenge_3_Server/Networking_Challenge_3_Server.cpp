@@ -3,16 +3,21 @@
 
 #include "GuessingGame.h"
 #include "ServerMessageManager.h"
+#include "Common.h"
 
 ENetAddress g_address;
 ENetHost* g_server;
 int g_numberOfClients = 0;
-
-const char* g_kServerStartupCompleteMessage = "Server startup complete! Waiting for clients to connect. . .\n";
-const char* g_kErrorWhileInitializingENETMessage = "An error occurred while initializing ENet.\n";
-const char* g_kErrorWhileCreatingENetServerHostMessage = "An error occurred while trying to create an ENet server host.\n";
+ServerMessageManager messageManager;
+int g_nextClientID = 1;
 
 bool CreateServer();
+
+void BroadcastStartPacket();
+void BroadcastGuessResultPacket(common::GuessPacket* guessPacket, bool guessedRight);
+void SendIDPacket(const ENetEvent& event, int id);
+
+void HandleRecievePacket(const ENetEvent& event, GuessingGame& guessingGame);
 
 int main()
 {
@@ -20,8 +25,8 @@ int main()
 
     if (enet_initialize() != 0)
     {
-        fprintf(stderr, g_kErrorWhileInitializingENETMessage);
-        std::cout << g_kErrorWhileInitializingENETMessage << std::endl;
+        fprintf(stderr, resources::kErrorWhileInitializingENETMessage);
+        std::cout << resources::kErrorWhileInitializingENETMessage << std::endl;
         return EXIT_FAILURE;
     }
     atexit(enet_deinitialize);
@@ -29,40 +34,62 @@ int main()
     if (!CreateServer())
     {
         fprintf(stderr,
-           g_kErrorWhileCreatingENetServerHostMessage);
+            resources::kErrorWhileCreatingENetServerHostMessage);
         exit(EXIT_FAILURE);
     }
 
-    std::cout << g_kServerStartupCompleteMessage;
+    std::cout << resources::kServerStartupCompleteMessage;
 
     GuessingGame guessingGame(0, 100);
-    ServerMessageManager serverMessageManager;
 
     ENetEvent event;
     while (enet_host_service(g_server, &event, 1200000) > 0)
     {
         switch (event.type)
         {
-        case ENET_EVENT_TYPE_CONNECT:
-            serverMessageManager.DisplayConnectionMessage(event);
-            g_numberOfClients++;
+            case ENET_EVENT_TYPE_CONNECT:
+            {
+                messageManager.DisplayConnectionMessage(event);
+                enet_uint32 hostPlusPort = event.peer->address.host + event.peer->address.port;                
+                g_numberOfClients++;
 
-            break;
-        case ENET_EVENT_TYPE_RECEIVE:
-            /*std::cout << event.packet->data << std::endl;
-            SendPacket((char*)event.packet->data);
-            enet_packet_destroy(event.packet);*/
+                SendIDPacket(event, g_nextClientID);
+                g_nextClientID++;
 
-            break;
-        case ENET_EVENT_TYPE_DISCONNECT:
-            serverMessageManager.DisplayDisconnectMessage(event);
-            g_numberOfClients--;
-            break;
+                if (g_numberOfClients == 2)
+                {
+                    messageManager.DisplayGameStartMessage(guessingGame.GetGuessingNumber());
+                    BroadcastStartPacket();
+                }
+
+                break;
+            }
+           
+            case ENET_EVENT_TYPE_RECEIVE:
+            {
+                HandleRecievePacket(event, guessingGame);
+                break;
+            }
+           
+            case ENET_EVENT_TYPE_DISCONNECT:
+            {
+                messageManager.DisplayDisconnectMessage(event);
+                g_numberOfClients--;
+
+                if (g_numberOfClients == 0)
+                {
+                    goto endServer;
+                }
+                break;
+            }
         }
     }
 
+endServer:
     if (g_server != nullptr)
         enet_host_destroy(g_server);
+
+    enet_deinitialize();
 
     return EXIT_SUCCESS;
 }
@@ -84,4 +111,98 @@ bool CreateServer()
 
 
     return g_server != nullptr;
+}
+
+void SendIDPacket(const ENetEvent& event, int id)
+{
+    common::IDPacket* idPacket = new common::IDPacket();
+    idPacket->id = id;
+    idPacket->Type = common::PacketHeaderTypes::PHT_ID;
+
+    ENetPacket* packet = enet_packet_create(idPacket,
+        sizeof(common::IDPacket),
+        ENET_PACKET_FLAG_RELIABLE);
+
+    enet_peer_send(event.peer, 0, packet);
+
+    enet_host_flush(g_server);
+    delete idPacket;
+}
+
+void BroadcastStartPacket()
+{
+    common::StartPacket* startPacket = new common::StartPacket();
+    startPacket->start = true;
+    startPacket->Type = common::PacketHeaderTypes::PHT_START;
+
+    ENetPacket* packet = enet_packet_create(startPacket,
+        sizeof(common::StartPacket),
+        ENET_PACKET_FLAG_RELIABLE);
+
+    enet_host_broadcast(g_server, 0, packet);
+    enet_host_flush(g_server);
+
+    delete startPacket;
+}
+
+void BroadcastGuessResultPacket(common::GuessPacket* guessPacket, bool guessedRight)
+{
+    common::GuessResultPacket* guessResultPacket = new common::GuessResultPacket();
+    guessResultPacket->guessedRight = guessedRight;
+    guessResultPacket->Type = common::PacketHeaderTypes::PHT_GUESS_RESULT;
+    guessResultPacket->guess = guessPacket->guess;
+    guessResultPacket->clientID = guessPacket->clientID;
+    guessResultPacket->clientUsername = guessPacket->userName;
+
+    ENetPacket* packet = enet_packet_create(guessResultPacket,
+        sizeof(common::GuessResultPacket),
+        ENET_PACKET_FLAG_RELIABLE);
+
+    enet_host_broadcast(g_server, 0, packet);
+    enet_host_flush(g_server);
+
+    delete guessResultPacket;
+}
+
+void HandleRecievePacket(const ENetEvent& event, GuessingGame& guessingGame)
+{
+    common::GamePacket* gamePacket = (common::GamePacket*)(event.packet->data);
+    if (gamePacket)
+    {
+        std::cout << "Received Game Packet " << std::endl;
+
+        switch (gamePacket->Type)
+        {
+            case common::PacketHeaderTypes::PHT_GUESS:
+            {
+                common::GuessPacket* guessPacket = (common::GuessPacket*)(event.packet->data);
+                if (guessPacket)
+                {
+                    if (!guessingGame.IsGuessCorrect(guessPacket->guess))
+                    {
+                        messageManager.DisplayIncorrectGuessMessage(guessPacket->guess, guessPacket->userName);
+                        BroadcastGuessResultPacket(guessPacket, false);
+                    }
+                    else
+                    {
+                        messageManager.DisplayCorrectGuessMessage(guessPacket->userName);
+                        BroadcastGuessResultPacket(guessPacket, true);
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    else
+    {
+        std::cout << resources::kInvalidPacketMessage << std::endl;
+    }
+
+    /* Clean up the packet now that we're done using it. */
+    enet_packet_destroy(event.packet);
+    {
+        enet_host_flush(g_server);
+    }
 }

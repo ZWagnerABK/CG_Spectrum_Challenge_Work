@@ -67,7 +67,11 @@ void GameplayState::Enter()
 
 void GameplayState::ProcessInput()
 {
-	int input = _getch();
+	int input = -1;
+	if (_kbhit())
+	{
+		input = _getch();
+	}
 	int arrowInput = 0;
 	int newPlayerX = m_player.GetXPosition();
 	int newPlayerY = m_player.GetYPosition();
@@ -211,6 +215,14 @@ void GameplayState::HandleCollision(int newPlayerX, int newPlayerY, bool process
 			if (collisionState.newScene != StateMachineExampleGame::SceneName::None)
 			{
 				m_pOwner->LoadScene(collisionState.newScene);
+			}
+			else if (m_pLevel->IsSpace(newPlayerX, newPlayerY)) // no collision
+			{
+				m_player.SetPosition(newPlayerX, newPlayerY);
+			}
+			else if (m_pLevel->IsWall(newPlayerX, newPlayerY))
+			{
+				// wall collision, do nothing
 			}
 		}
 	}

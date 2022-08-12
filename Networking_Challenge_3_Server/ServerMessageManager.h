@@ -10,8 +10,8 @@ class ServerMessageManager
 
 		void DisplayConnectionMessage(ENetEvent event);
 		void DisplayDisconnectMessage(ENetEvent event);
-
-	private:
-
+		void DisplayGameStartMessage(int number);
+		void DisplayIncorrectGuessMessage(int guessNumber, std::string clientUsername);
+		void DisplayCorrectGuessMessage(std::string clientUsername);
 };
 

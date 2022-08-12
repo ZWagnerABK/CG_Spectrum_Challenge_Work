@@ -1,14 +1,16 @@
 #pragma once
-class ClientConsoleManager
+class ClientConsole
 {
 	public:
-		ClientConsoleManager() {};
-		~ClientConsoleManager() {};
+		ClientConsole() {};
+		~ClientConsole() {};
 
 		void SetClientUsernameLength(int length);
 		void ResetConsole();
 		void EraseConsoleLine();
 		void RepositionInputCursor(bool inital);
+		void RepositionToLogPostion();
+		void IncremenetLogPosition();
 
 	private:
 		int m_clientUsernameLength = 0;

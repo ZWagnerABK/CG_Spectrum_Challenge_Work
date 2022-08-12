@@ -231,6 +231,11 @@ PlacableActor* Level::CheckForCollidedActor(int x, int y)
 
 	for(auto actor = m_pActors.begin(); actor != m_pActors.end(); ++actor)
 	{
+		if (!(*actor)->IsActive())
+		{
+			continue;
+		}
+
 		//Should only be one collision at a time for a player
 		if (IsCollisionOccuring(x, y, (*actor), collidedActor))
 			break;
