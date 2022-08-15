@@ -11,6 +11,11 @@ void ServerMessageManager::DisplayConnectionMessage(ENetEvent event)
         << "\n";
 }
 
+void ServerMessageManager::DisplayServerStartupCompleteMessage()
+{
+    std::cout << resources::kServerStartupCompleteMessage;
+}
+
 void ServerMessageManager::DisplayDisconnectMessage(ENetEvent event)
 {
     std::cout << "The client from "
@@ -31,5 +36,10 @@ void ServerMessageManager::DisplayIncorrectGuessMessage(int guessNumber, std::st
 
 void ServerMessageManager::DisplayCorrectGuessMessage(std::string clientUsername)
 {
-    std::cout << clientUsername << resources::kCorrectGuessServerMessage << std::endl;
+    std::cout << clientUsername << resources::kCorrectGuessServerMessage << clientUsername << "." <<  std::endl;
+}
+
+void ServerMessageManager::DisplayNoUsersLeftMessage()
+{
+    std::cout << resources::kNoClientsRemain << std::endl;
 }

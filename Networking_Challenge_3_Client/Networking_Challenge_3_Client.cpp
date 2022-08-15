@@ -7,43 +7,51 @@
 #include "ClientMessageManager.h";
 #include "Common.h"
 
-ENetAddress g_address;
-ENetHost* g_client;
-std::string g_clientUserName = "";
-bool g_connectedToServer = false;
 ClientMessageManager messageManager;
+
+ENetAddress g_address;
+ENetHost* g_client = nullptr;
+ENetPeer* peer = nullptr;
+
+std::string g_clientUserName = "";
+
 int g_guessedNumber = -1;
-bool g_startUserInput = false;
 int g_clientID = -1;
+
+bool g_connectedToServer = false;
+bool g_startUserInput = false;
 bool g_endClient = false;
 bool g_endThreads = false;
+bool g_consoleExit = false;
 
 int InitializeClient();
+
 bool CreateClient();
+
 ENetPeer* ConnectToServer(ENetEvent &event);
+
 void HandleReceivePacket(const ENetEvent& event);
-
-void UserInput(std::string message, std::function<bool(std::string)> condition, std::string& storage);
-
 void UserInputThread();
-
 void BroadcastGuessPacket();
+void ClientDisconnect();
 
+BOOL WINAPI CtrlHandler(DWORD dwCtrlType);
+
+//TODO:  Not sure if I'm happy with the way I did all message display across the project.  Would reinvestigate for a refactor.
 int main()
 {
-    std::cout << "Hello!  This will say something later.\n\n";
-
     if(InitializeClient() == 1)
         return EXIT_FAILURE;
 
+    //Thought it would be a better idea to store the username in the ClientMessageManager rather than constanly pass it in as a parameter.
     messageManager.SetClientUsername(resources::kEnterUserName, [](std::string input){ return input != " "; }, g_clientUserName);
 
     ENetEvent event;
-    ENetPeer* peer = ConnectToServer(event);
+    peer = ConnectToServer(event);
 
     std::thread inputThread(UserInputThread);
 
-    while (enet_host_service(g_client, &event, 1200000) > 0)
+    while (enet_host_service(g_client, &event, 1200000) > 0 && !g_consoleExit)
     {
         switch (event.type)
         {
@@ -61,7 +69,7 @@ int main()
 endClient:
 
     inputThread.join();
-    enet_peer_disconnect(peer, 0);
+    ClientDisconnect();
 
     if (g_client != nullptr)
         enet_host_destroy(g_client);
@@ -130,11 +138,9 @@ int InitializeClient()
     }
     atexit(enet_deinitialize);
 
-    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-    DWORD consoleMode;
-    GetConsoleMode(h, &consoleMode);
-    consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-    SetConsoleMode(h, consoleMode);
+    messageManager.SetupConsole();
+    //TODO:  Find a way to move this into the ClientConsole class. Ran into issue where it requires a static handler class.
+    SetConsoleCtrlHandler(CtrlHandler, TRUE);
 
     if (!CreateClient())
     {
@@ -241,4 +247,41 @@ void BroadcastGuessPacket()
     g_startUserInput = false;
 
     delete guessPacket;
+}
+
+//Used as a handler for SetConsoleCtrlHandler to deal with disconnecting from the server on specific exit conditions related to the console.
+//Noted in another TODO that ideally this would be in the ClientConsole class, was not sure how to implement it there without major refactoring.
+BOOL WINAPI CtrlHandler(DWORD dwCtrlType)
+{
+    switch (dwCtrlType)
+    {
+        case CTRL_CLOSE_EVENT:
+        {
+            ClientDisconnect();
+            return FALSE;
+        }
+        case CTRL_C_EVENT:
+        {
+            ClientDisconnect();
+            return TRUE;
+        }
+        case CTRL_BREAK_EVENT:
+            return FALSE;
+        case CTRL_LOGOFF_EVENT:
+            return FALSE;
+        case CTRL_SHUTDOWN_EVENT:
+            return FALSE;
+        default:
+            return FALSE;
+            break;
+    }
+}
+
+void ClientDisconnect()
+{
+    if (peer != nullptr)
+    {
+        enet_peer_disconnect(peer, 0);
+        enet_host_flush(g_client);
+    }
 }

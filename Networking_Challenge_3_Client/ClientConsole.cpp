@@ -2,9 +2,20 @@
 #include <iostream>
 #include <windows.h>
 
-void ClientConsole::SetClientUsernameLength(int length)
+void ClientConsole::SetInputMessageLength(int inputMessageLength)
 {
-    m_clientUsernameLength = length;
+    m_inputMessageLength = inputMessageLength;
+}
+
+void ClientConsole::SetupConsole()
+{
+    //Turn on Virtual Terminal Processing so \33 commands will work for Windows 10 and above
+    //Apperantly turned off by default
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD consoleMode;
+    GetConsoleMode(h, &consoleMode);
+    consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(h, consoleMode);
 }
 
 void ClientConsole::ResetConsole()
@@ -53,12 +64,14 @@ void ClientConsole::RepositionInputCursor(bool initial = false)
 
     if (initial)
     {
+        //Place cursor in position for input message to be written to the screen.
         c.X = 0;
         c.Y = bottomRow;
     }
     else
     {
-        c.X = m_clientUsernameLength;
+        //Place the cursor at the end of the input message already on the screen.
+        c.X = m_inputMessageLength;
         c.Y = bottomRow;
     }
 

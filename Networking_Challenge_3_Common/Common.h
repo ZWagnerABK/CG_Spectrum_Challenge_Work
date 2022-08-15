@@ -1,5 +1,9 @@
 #pragma once
 
+/*
+* Common is a static library being used by Networking_Challenge_3_Client and Networking_Challenge_3_Server to share packet structs, resource strings, and an enum representing packet headers.
+*/
+
 #include <string>
 
 namespace common {
@@ -61,10 +65,11 @@ namespace resources
 	static const char* kWelcomeMessage = "Welcome to the number guessing game!";
 	static const char* kInputLine = "Enter a number to guess >> ";
 	static const char* kIncorrectGuessServerMessage = " entered an incorrect guess of ";
-	static const char* kIncorrectGuessClientMessage = " guessed wrong with a guess of";
+	static const char* kIncorrectGuessClientMessage = " guessed wrong with a guess of ";
 	static const char* kYouIncorrectGuessClientMessage = "You guessed wrong with a guess of ";
-	static const char* kCorrectGuessServerMessage = " guessed correctly!! Ending game.";
+	static const char* kCorrectGuessServerMessage = " guessed correctly!! Ending game for ";
 	static const char* kCorrectGuessClientMessage = " guessed correctly!!";
 	static const char* kYouCorrectGuessClientMessage = "You guessed correctly!! The correct number was ";
-	static const char* kEndingClientMessage = "Ending client.";
+	static const char* kEndingClientMessage = "Ending game.";
+	static const char* kNoClientsRemain = "No clients remain. Shutting down server.";
 }

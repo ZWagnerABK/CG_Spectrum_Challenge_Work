@@ -19,10 +19,10 @@ void SendIDPacket(const ENetEvent& event, int id);
 
 void HandleRecievePacket(const ENetEvent& event, GuessingGame& guessingGame);
 
+
+//TODO:  Not sure if I'm happy with the way I did all message display across the project.  Would reinvestigate for a refactor.
 int main()
 {
-    std::cout << "Hello!  Something will go here eventually.\n\n";
-
     if (enet_initialize() != 0)
     {
         fprintf(stderr, resources::kErrorWhileInitializingENETMessage);
@@ -38,7 +38,7 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    std::cout << resources::kServerStartupCompleteMessage;
+    messageManager.DisplayServerStartupCompleteMessage();
 
     GuessingGame guessingGame(0, 100);
 
@@ -49,13 +49,15 @@ int main()
         {
             case ENET_EVENT_TYPE_CONNECT:
             {
-                messageManager.DisplayConnectionMessage(event);
-                enet_uint32 hostPlusPort = event.peer->address.host + event.peer->address.port;                
+                messageManager.DisplayConnectionMessage(event);             
                 g_numberOfClients++;
 
+                //Give each client an ID determined by the server.  Intention was to make it easier to identify which client is sending what packets.
+                //I think the way I'm doing right now is fine,  but in a different world, might want something like a GUID.
                 SendIDPacket(event, g_nextClientID);
                 g_nextClientID++;
 
+                //Start game once two clients have connected.
                 if (g_numberOfClients == 2)
                 {
                     messageManager.DisplayGameStartMessage(guessingGame.GetGuessingNumber());
@@ -78,6 +80,7 @@ int main()
 
                 if (g_numberOfClients == 0)
                 {
+                    messageManager.DisplayNoUsersLeftMessage();
                     goto endServer;
                 }
                 break;
@@ -86,6 +89,7 @@ int main()
     }
 
 endServer:
+
     if (g_server != nullptr)
         enet_host_destroy(g_server);
 
@@ -152,7 +156,7 @@ void BroadcastGuessResultPacket(common::GuessPacket* guessPacket, bool guessedRi
     guessResultPacket->Type = common::PacketHeaderTypes::PHT_GUESS_RESULT;
     guessResultPacket->guess = guessPacket->guess;
     guessResultPacket->clientID = guessPacket->clientID;
-    guessResultPacket->clientUsername = guessPacket->userName;
+    guessResultPacket->clientUsername = guessPacket->userName; //Sending the username back so that other clients can tell which user made what guess in their logs
 
     ENetPacket* packet = enet_packet_create(guessResultPacket,
         sizeof(common::GuessResultPacket),

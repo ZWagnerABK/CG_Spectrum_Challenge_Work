@@ -1,10 +1,12 @@
+/*
+* ClientMessageManager is used as a way of managing the messages that will be displayed on the console screen.
+*/
+
 #pragma once
 
 #include <memory>
 #include <functional>
 #include <string>
-#include <format>
-#include <string_view>
 #include <iostream>
 #include "ClientConsole.h"
 
@@ -23,7 +25,10 @@ class ClientMessageManager
 		void DisplayWrongGuessMessage(bool didIGuessWrong, std::string otherUsername, int wrongGuess);
 		void DisplayCorrectGuessMessage(bool didIGuessWrong, std::string otherUsername, int wrongGuess);
 
+		void SetupConsole();
+
 	private:
+		//A internal class to seperate out code that interacts with the console.
 		std::unique_ptr<ClientConsole> m_Console;
 		std::string m_clientUsername;
 };

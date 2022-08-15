@@ -15,14 +15,23 @@ void ClientMessageManager::SetupGuessingRoomDisplay()
     m_Console->RepositionInputCursor(true);
 }
 
+void ClientMessageManager::SetupConsole()
+{
+    std::string inputMessage(resources::kInputLine);
+
+    m_Console->SetInputMessageLength(inputMessage.length());
+    m_Console->SetupConsole();
+}
+
 void ClientMessageManager::SetClientUsername(std::string message, std::function<bool(std::string)> condition, std::string& storage)
 {
     UserInput(message, condition, storage);
 
     m_clientUsername = storage;
-    m_Console->SetClientUsernameLength(storage.length());
 }
 
+//TODO:  Refactor this function so that it can store the message being typed before enter is hit.
+//       Right now the program may run fine for me, but if this was truly two seperate clients entering input at the same time, the input line would break very fast.
 void ClientMessageManager::UserInput(std::string message, std::function<bool(std::string)> condition, std::string& storage)
 {
     std::string input;
@@ -54,6 +63,8 @@ void ClientMessageManager::UserInput(std::string message, std::function<bool(std
     } while (!exit);
 }
 
+//TODO:  Refactor this function so that it can store the message being typed before enter is hit.
+//       Right now the program may run fine for me, but if this was truly two seperate clients entering input at the same time, the input line would break very fast.
 void ClientMessageManager::UserInput(std::string message, std::function<bool(int)> condition, int& storage)
 {
     int input = -1;
@@ -93,13 +104,17 @@ void ClientMessageManager::DisplayWrongGuessMessage(bool didIGuessWrong, std::st
     if (didIGuessWrong)
     {
         std::cout << resources::kYouIncorrectGuessClientMessage << wrongGuess << std::endl;
+        m_Console->IncremenetLogPosition();
+        m_Console->RepositionInputCursor(true);
     }
     else 
     {
         std::cout << otherUsername << resources::kIncorrectGuessClientMessage << wrongGuess << std::endl;
+        m_Console->IncremenetLogPosition();
+        m_Console->RepositionInputCursor(false);
     }
 
-    m_Console->RepositionInputCursor(false);
+   
 }
 
 void ClientMessageManager::DisplayCorrectGuessMessage(bool didIGuessWrong, std::string otherUsername, int rightGuess)
@@ -108,12 +123,14 @@ void ClientMessageManager::DisplayCorrectGuessMessage(bool didIGuessWrong, std::
 
     if (didIGuessWrong)
     {
-        std::cout << resources::kYouCorrectGuessClientMessage << rightGuess << "." << resources::kEndingClientMessage <<  std::endl;
+        std::cout << resources::kYouCorrectGuessClientMessage << rightGuess << ". " << resources::kEndingClientMessage <<  std::endl;
+        m_Console->IncremenetLogPosition();
+        m_Console->RepositionInputCursor(true);
     }
     else
     {
         std::cout << otherUsername << resources::kCorrectGuessClientMessage << std::endl;
+        m_Console->IncremenetLogPosition();
+        m_Console->RepositionInputCursor(false);
     }
-
-    m_Console->RepositionInputCursor(false);
 }
